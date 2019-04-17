@@ -1,8 +1,8 @@
 # whattime
 
-## About
+## What's this?
 - `What time` is electron app.
-- This app is always executed from menu bar in macOS.
+- This app is always executed menu bar app in macOS.
     - Not supported Windows...
 - This app is converted date and time by some format.
     - unixtime
@@ -11,39 +11,48 @@
     - JST
     - and more...
 
-## Getting Started
+## Frameworks
+- [Vue.js](https://github.com/vuejs/vue)
+- [vuetify](https://github.com/vuetifyjs/vuetify)
+- [electron](https://github.com/electron/electron)
+- [electron-builder](https://github.com/electron-userland/electron-builder)
+- [Material Design](https://material.io)
+
+## Installation
+
 ```
 npm install
 ```
 
-### Project setup for Web App
+### Getting started for Web App
 
-#### Compiles and hot-reloads for development
+#### Development
+
 ```
-npm run serve
+$ npm run serve
 ```
 
-#### Compiles and minifies for production
+Open `http://localhost:8080`.
+
+#### Production
+
 ```
 npm run build
 ```
 
-#### Lints and fixes files
-```
-npm run lint
-```
+### Getting started for Electron
 
-### Project setup for Electron
+#### Development
 
-#### Compiles and hot-reloads for development
 ```
 npm npm run electron:serve
 ```
 
-#### Compiles and minifies for production
+#### Production
+
 ```
 npm run electron:build
 ```
 
 ## License
-What time is `GNU General Public License v3` licensed.
+What time is `GNU General Public License v3.0` licensed.
