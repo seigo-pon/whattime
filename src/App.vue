@@ -1,8 +1,11 @@
 <template>
   <v-app>
-    <v-toolbar app class="elevation-3">
+    <v-toolbar
+      app
+      class="primary elevation-3"
+    >
       <v-toolbar-title
-        class="headline font-weight-medium text-uppercase"
+        class="headline white--text font-weight-medium text-uppercase"
       >
         What time?
       </v-toolbar-title>
@@ -14,7 +17,10 @@
         href="https://github.com/seigo-pon/whattime"
         target="_blank"
       >
-        <v-avatar fab size="32px">
+        <v-avatar
+          fab
+          size="32px"
+        >
           <img src="./assets/GitHub-Mark-64px.png" alt="Github">
         </v-avatar>
       </v-btn>

@@ -50,11 +50,11 @@
               md5
               text-xs-left
             >
-              <span class="font-weight-medium text-uppercase">Now:</span>
+              <span class="font-weight-medium grey--text text-uppercase">Now:</span>
               <v-btn
                 flat
                 small
-                color="info"
+                color="secondary"
                 @click="inputCopyDateTime(nowDate)"
               >
                 {{ nowDate }}
@@ -82,7 +82,10 @@
         mb-4
         v-if="isResult()"
       >
-        <v-card class="elevation-2">
+        <v-card
+          class="elevation-2"
+          ref="result"
+        >
           <v-list>
             <v-subheader>
               <v-icon>access_time</v-icon>
@@ -118,7 +121,7 @@
         xs12
         mb-4
       >
-        <v-expansion-panel>
+        <v-expansion-panel v-model="historyPanelIndex">
           <v-expansion-panel-content>
             <template v-slot:header>
               <div class="text-xs-left">
@@ -134,6 +137,7 @@
                     <v-data-table
                       :headers="historyHeaders"
                       :items="historyDateTimes"
+                      hide-actions
                       :pagination.sync="historyPagenation"
                       class="elevation-1"
                     >
@@ -156,6 +160,15 @@
                         </td>
                       </template>
                     </v-data-table>
+                    <div
+                      v-if="historyPages > 0"
+                      class="text-xs-center pt-2"
+                    >
+                      <v-pagination
+                        v-model="historyPagenation.page"
+                        :length="historyPages"
+                      ></v-pagination>
+                    </div>
                   </v-flex>
                 </v-layout>
               </v-container>
@@ -186,6 +199,10 @@
 <script>
   import Datastore from 'nedb'
   import moment from 'moment-timezone'
+  import 'moment/locale/ja'
+
+  // moment.js set locale to japanese
+  moment.locale('ja')
 
   // instance of local db
   const db = new Datastore({
@@ -203,6 +220,7 @@
         inputDateTime: "",
         resultDateTimes: {},
         historyDateTimes: [],
+        historyPanelIndex: null,
         historyHeaders: [
           { text: 'input at', align: "left", value: 'createdAt' },
           { text: 'input value', value: 'input' },
@@ -213,6 +231,24 @@
           sortBy: 'createdAt'
         },
         clipboardSnackbar: false
+      }
+    },
+    watch: {
+      historyPanelIndex () {
+        if (this.historyPanelIndex !== null) {
+          // Scroll to history
+          this.$nextTick(() => {
+            this.$vuetify.goTo(1000)
+          })
+        }
+      }
+    },
+    computed: {
+      historyPages () {
+        if (this.historyPagenation.rowsPerPage == null || this.historyPagenation.totalItems == null) {
+          return 0
+        }
+        return Math.ceil(this.historyPagenation.totalItems / this.historyPagenation.rowsPerPage)
       }
     },
     methods: {
@@ -226,7 +262,7 @@
         const date = moment()
         switch (this.nowDateFormat) {
         case 'unixtime':
-          this.nowDate = date.unix()
+          this.nowDate = date.valueOf()
           break
 
         case 'JST':
@@ -235,7 +271,7 @@
 
         case 'UTC':
         default:
-          this.nowDate = date.utc()
+          this.nowDate = date.utc().format()
           break
         }
       },
@@ -264,16 +300,36 @@
         console.log(this.inputDateTime)
 
         // Is this input data unixtime?
-        const isUnixtime = !isNaN(this.inputDateTime)
+        let format = 'JST'
+        if (!isNaN(this.inputDateTime)) {
+          format = 'unixtime'
+        } else if (String(this.inputDateTime).indexOf('GMT') !== -1) {
+          format = 'UTC'
+        }
+        console.log(format)
 
         // Input data convert to date.
-        const dateTime = isUnixtime ? moment.unix(Number(this.inputDateTime)) : moment(this.inputDateTime)
+        let dateTime = null
+        switch (format) {
+        case 'unixtime':
+          dateTime = moment(Number(this.inputDateTime))
+          break
+
+        case 'JST':
+          dateTime = moment(this.inputDateTime)
+          break
+
+        case 'UTC':
+        default:
+          dateTime = moment.utc(this.inputDateTime)
+          break
+        }
         console.log(dateTime)
 
         // result data
         this.resultDateTimes = {
-          'unixtime': dateTime.unix(),
-          'UTC': dateTime.utc(),
+          'unixtime': dateTime.valueOf(),
+          'UTC': dateTime.utc().format(),
           'ISO': dateTime.toISOString(),
           'JST': dateTime.tz('Asia/Tokyo').format(),
           'Locale': dateTime.format('LLLL'),
@@ -282,11 +338,16 @@
         }
         console.log(this.resultDateTimes)
 
+        // Scroll to result
+        this.$nextTick(() => {
+          this.$vuetify.goTo(280)
+        })
+
         // history data
         const historyDateTime = {
           'createdAt': new Date(),
           'input': this.inputDateTime,
-          'result': this.resultDateTimes[isUnixtime ? 'UTC' : 'unixtime']
+          'result': this.resultDateTimes[format === 'unixtime' ? 'UTC' : 'unixtime']
         }
 
         // History data is saved to local db.
@@ -296,6 +357,7 @@
           } else {
             console.log(doc)
             this.historyDateTimes.unshift(doc)
+            this.historyPagenation.totalItems = this.historyDateTimes.length
           }
         })
       },
@@ -330,6 +392,7 @@
         } else {
           console.log(docs)
           this.historyDateTimes = docs
+          this.historyPagenation.totalItems = this.historyDateTimes.length
         }
       })
 
