@@ -1,29 +1,49 @@
 # whattime
 
-## Project setup
+## About
+- `What time` is electron app.
+- This app is always executed from menu bar in macOS.
+    - Not supported Windows...
+- This app is converted date and time by some format.
+    - unixtime
+    - UTC
+    - ISO
+    - JST
+    - and more...
+
+## Getting Started
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### Project setup for Web App
+
+#### Compiles and hot-reloads for development
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+#### Compiles and minifies for production
 ```
 npm run build
 ```
 
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
+#### Lints and fixes files
 ```
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Project setup for Electron
+
+#### Compiles and hot-reloads for development
+```
+npm npm run electron:serve
+```
+
+#### Compiles and minifies for production
+```
+npm run electron:build
+```
+
+## License
+What time is `GNU General Public License v3` licensed.
