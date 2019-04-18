@@ -21,7 +21,7 @@
 ## Installation
 
 ```
-npm install
+$ npm install
 ```
 
 ### Getting started for Web App
@@ -37,7 +37,7 @@ Open `http://localhost:8080`.
 #### Production
 
 ```
-npm run build
+$ npm run build
 ```
 
 ### Getting started for Electron
@@ -45,13 +45,13 @@ npm run build
 #### Development
 
 ```
-npm npm run electron:serve
+$ npm run electron:serve
 ```
 
 #### Production
 
 ```
-npm run electron:build
+$ npm run electron:build
 ```
 
 ## License
