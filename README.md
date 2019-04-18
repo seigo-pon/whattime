@@ -1,7 +1,7 @@
-# whattime
+# What Time
 
 ## What's this?
-- `What time` is electron app.
+- `What Time` is electron app.
 - This app is always executed menu bar app in macOS.
     - Not supported Windows...
 - This app is converted date and time by some format.
