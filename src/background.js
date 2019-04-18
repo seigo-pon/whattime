@@ -1,10 +1,20 @@
 'use strict'
 
-import { app, protocol, BrowserWindow, Menu, Tray, globalShortcut } from 'electron'
+import {
+  app,
+  protocol,
+  BrowserWindow,
+  Menu,
+  Tray,
+  globalShortcut,
+  nativeImage,
+  shell
+} from 'electron'
 import {
   createProtocol,
   installVueDevtools
 } from 'vue-cli-plugin-electron-builder/lib'
+import * as path from 'path'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -29,6 +39,11 @@ function createWindow () {
     // Load the index.html when not in development
     win.loadURL('app://./index.html')
   }
+
+  win.webContents.on('new-window', (event, url) => {
+    event.preventDefault()
+    shell.openExternal(url)
+  })
 
   win.on('activate-with-no-open-windows', () => {
     win.show()
@@ -74,7 +89,7 @@ function createTray() {
     ])
   }
 
-  tray = new Tray(__dirname + '/../src/assets/baseline_access_time_white_18dp@2x.png')
+  tray = new Tray(nativeImage.createFromPath(path.join(__dirname, "/../src/assets/baseline_access_time_white_18dp@2x.png")))
   tray.setToolTip('This is my Application.')
   tray.setContextMenu(contextMenu)
 }
