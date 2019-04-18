@@ -1,6 +1,8 @@
 {
   "name": "whattime",
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "description": "This app is converted date and time by some format.",
+  "author": "seigo-pon <s15upon@Gmail.com>",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
