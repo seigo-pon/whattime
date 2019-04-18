@@ -19,6 +19,7 @@
           <v-layout>
             <v-flex
               xs12
+              sm10
               md10
             >
               <v-form onSubmit="return false;">
@@ -33,6 +34,7 @@
 
             <v-flex
               xs12
+              sm2
               md2
             >
               <v-btn
@@ -47,6 +49,7 @@
           <v-layout>
             <v-flex
               xs12
+              sm5
               md5
               text-xs-left
             >
@@ -164,10 +167,23 @@
                       v-if="historyPages > 0"
                       class="text-xs-center pt-2"
                     >
-                      <v-pagination
-                        v-model="historyPagenation.page"
-                        :length="historyPages"
-                      ></v-pagination>
+                      <div>
+                        <v-pagination
+                          v-model="historyPagenation.page"
+                          :length="historyPages"
+                          circle
+                        ></v-pagination>
+                      </div>
+                      <div class="text-xs-right">
+                        <v-btn
+                          fab
+                          flat
+                          small
+                          @click="deleteHistoryDateTimeAll"
+                        >
+                          <v-icon>delete_forever</v-icon>
+                        </v-btn>
+                      </div>
                     </div>
                   </v-flex>
                 </v-layout>
@@ -227,6 +243,7 @@
           { text: 'result value', value: 'result' }
         ],
         historyPagenation: {
+          page: 1,
           descending: true,
           sortBy: 'createdAt'
         },
@@ -252,12 +269,6 @@
       }
     },
     methods: {
-      getBrowserLocale () {
-        if (window.navigator.languages) {
-          return window.navigator.languages[0]
-        }
-        return window.navigator.userLanguage || window.navigator.language
-      },
       tickDate () {
         const date = moment()
         switch (this.nowDateFormat) {
@@ -311,9 +322,18 @@
         // Input data convert to date.
         let dateTime = null
         switch (format) {
-        case 'unixtime':
-          dateTime = moment(Number(this.inputDateTime))
+        case 'unixtime': {
+          let unixtimeString = String(this.inputDateTime)
+
+          // Because foramt of unixtime is used milliseconds, input number is needed to 13 digits.
+          for (let i = unixtimeString.length; i < 13; i++) {
+            unixtimeString += '0'
+          }
+          console.log(unixtimeString)
+
+          dateTime = moment(Number(unixtimeString))
           break
+        }
 
         case 'JST':
           dateTime = moment(this.inputDateTime)
@@ -340,7 +360,7 @@
 
         // Scroll to result
         this.$nextTick(() => {
-          this.$vuetify.goTo(280)
+          this.$vuetify.goTo(250)
         })
 
         // history data
@@ -382,6 +402,17 @@
 
         // Snackbar show.
         this.clipboardSnackbar = true
+      },
+      deleteHistoryDateTimeAll () {
+        db.remove({}, (err, runRemoved) => {
+          if (err) {
+            console.log(err)
+          } else {
+            console.log(runRemoved)
+            this.historyDateTimes = []
+            this.historyPagenation.totalItems = this.historyDateTimes.length
+          }
+        })
       }
     },
     mounted () {

@@ -21,7 +21,7 @@
           fab
           size="32px"
         >
-          <img src="./assets/GitHub-Mark-64px.png" alt="Github">
+          <img src="./assets/GitHub-Mark-Light-64px.png" alt="Github">
         </v-avatar>
       </v-btn>
     </v-toolbar>

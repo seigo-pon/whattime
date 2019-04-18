@@ -5,11 +5,14 @@ import {
   createProtocol,
   installVueDevtools
 } from 'vue-cli-plugin-electron-builder/lib'
+
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let win
+let win = null
+let tray = null
+let forceQuit = false
 
 // Standard scheme must be registered before the app is ready
 protocol.registerStandardSchemes(['app'], { secure: true })
@@ -27,12 +30,24 @@ function createWindow () {
     win.loadURL('app://./index.html')
   }
 
-  win.on('close', (event) => {
+  win.on('activate-with-no-open-windows', () => {
+    win.show()
+  })
+
+  win.on('minimize', (event) => {
     event.preventDefault()
     win.hide()
   })
 
+  win.on('close', (event) => {
+    if (!forceQuit) {
+      event.preventDefault()
+      win.hide()
+    }
+  })
+
   win.on('closed', () => {
+    tray = null
     win = null
   })
 }
@@ -47,15 +62,19 @@ function createTray() {
     contextMenu = Menu.buildFromTemplate([
       { label: 'About', role: 'about' },
       { type: 'separator' },
-      { label: 'Show window.', role: 'front' },
+      { label: 'Show window.', click: () => {
+        if (win === null) {
+          createWindow()
+        } else {
+          win.show()
+        }
+      }},
       { type: 'separator' },
-      { label: 'Hide window.', role: 'hide' },
-      { type: 'separator' },
-      { label: 'Quit', role: 'quit' }
+      { label: 'Quit', role: 'quit'}
     ])
   }
 
-  const tray = new Tray('./assets/logo.png')
+  tray = new Tray(__dirname + '/../src/assets/baseline_access_time_white_18dp@2x.png')
   tray.setToolTip('This is my Application.')
   tray.setContextMenu(contextMenu)
 }
@@ -76,6 +95,8 @@ app.on('activate', () => {
   // dock icon is clicked and there are no other windows open.
   if (win === null) {
     createWindow()
+  }
+  if (tray === null) {
     createTray()
   }
 })
@@ -99,12 +120,17 @@ app.on('ready', async () => {
   if (process.platform === 'darwin') {
     // Doc icon is hidden.
     app.dock.hide()
+
     // App go to front by shortcut key.
-    globalShortcut.register('Ctrl+Cmd+X', () => {
+    globalShortcut.register('Ctrl+Cmd+L', () => {
       console.log('Notify global shortcut for whattime!')
       win.show()
     })
   }
+})
+
+app.on('before-quit', () => {
+  forceQuit = true
 })
 
 // Exit cleanly on request from parent process in development mode.
