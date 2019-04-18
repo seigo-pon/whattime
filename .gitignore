@@ -60,4 +60,8 @@ typings/
 # next.js build output
 .next
 
+# WebApp output
 dist/
+
+#Electron-builder output
+dist_electron/
