@@ -28,7 +28,10 @@ let forceQuit = false
 protocol.registerStandardSchemes(['app'], { secure: true })
 function createWindow () {
   // Create the browser window.
-  win = new BrowserWindow({ width: 800, height: 600 })
+  win = new BrowserWindow({
+    width: 800,
+    height: 600
+  })
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
@@ -40,6 +43,7 @@ function createWindow () {
     win.loadURL('app://./index.html')
   }
 
+  // Open link url to external browser
   win.webContents.on('new-window', (event, url) => {
     event.preventDefault()
     shell.openExternal(url)
@@ -55,6 +59,7 @@ function createWindow () {
   })
 
   win.on('close', (event) => {
+    // No quit event only
     if (!forceQuit) {
       event.preventDefault()
       win.hide()
@@ -71,13 +76,13 @@ function createTray() {
   let contextMenu
   if (process.platform !== 'darwin') {
     contextMenu = Menu.buildFromTemplate([
-      { label: 'Show window.', role: 'front' }
+      { label: 'Show window', role: 'front' }
     ])
   } else {
     contextMenu = Menu.buildFromTemplate([
-      { label: 'About', role: 'about' },
+      { label: 'About What Time', role: 'about' },
       { type: 'separator' },
-      { label: 'Show window.', click: () => {
+      { label: 'Show window', click: () => {
         if (win === null) {
           createWindow()
         } else {
@@ -89,9 +94,35 @@ function createTray() {
     ])
   }
 
-  tray = new Tray(nativeImage.createFromPath(path.join(__dirname, "/../src/assets/baseline_access_time_white_18dp@2x.png")))
+  const iconFileName = "trayTemplate.png"
+  tray = new Tray(nativeImage.createFromPath(path.join(__dirname, "/../src/assets/" + iconFileName)))
   tray.setToolTip('This is my Application.')
   tray.setContextMenu(contextMenu)
+}
+
+function createMenu() {
+  let contextMenu
+  if (process.platform !== 'darwin') {
+    contextMenu = Menu.buildFromTemplate([])
+  } else {
+    contextMenu = Menu.buildFromTemplate([
+      { label: 'Edit',
+        submenu: [
+          { label: 'Undo', accelerator: 'CmdOrCtrl+Z', selector: 'undo:' },
+          { label: 'Redo', accelerator: 'Shift+CmdOrCtrl+Z', selector: 'redo:' },
+          { type: 'separator' },
+          { label: 'Cut', accelerator: 'CmdOrCtrl+X', selector: 'cut:' },
+          { label: 'Copy', accelerator: 'CmdOrCtrl+C', selector: 'copy:' },
+          { label: 'Paste', accelerator: 'CmdOrCtrl+V', selector: 'paste:' },
+          { label: 'Select All', accelerator: 'CmdOrCtrl+A', selector: 'selectAll:' },
+          { type: 'separator' },
+          { label: 'Quit', accelerator: 'CmdOrCtrl+Q', role: 'quit' },
+        ]
+      }
+    ])
+  }
+
+  Menu.setApplicationMenu(contextMenu)
 }
 
 // Quit when all windows are closed.
@@ -130,6 +161,7 @@ app.on('ready', async () => {
   }
 
   createWindow()
+  createMenu()
   createTray()
 
   if (process.platform === 'darwin') {
@@ -144,6 +176,7 @@ app.on('ready', async () => {
   }
 })
 
+// Event of quitting app (from menu or shortcut key)
 app.on('before-quit', () => {
   forceQuit = true
 })

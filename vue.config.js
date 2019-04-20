@@ -5,7 +5,8 @@ module.exports = {
         // options placed here will be merged with default configuration and passed to electron-builder
         productName: "What Time",
         appId: "jp.sample.whattime",
-        files: [
+        extraResources: [
+          "src/assets/*",
         ]
       }
     }
