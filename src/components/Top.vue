@@ -103,7 +103,10 @@
 
               <v-list-tile :key="resultKey">
                 <v-list-tile-content>
-                  <v-list-tile-title v-text="resultKey">:</v-list-tile-title>
+                  <v-list-tile-title
+                    v-text="resultKey"
+                    class="font-weight-medium grey--text text-uppercase"
+                  ></v-list-tile-title>
                 </v-list-tile-content>
                 <v-list-tile-action class="align-end">
                   <v-btn
