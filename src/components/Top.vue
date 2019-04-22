@@ -16,7 +16,7 @@
             </v-flex>
           </v-layout>
 
-          <v-layout>
+          <v-layout wrap>
             <v-flex
               xs12
               sm10
@@ -46,7 +46,7 @@
             </v-flex>
           </v-layout>
 
-          <v-layout>
+          <v-layout wrap>
             <v-flex
               xs12
               sm5
