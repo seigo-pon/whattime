@@ -4,9 +4,9 @@
 
 ## Features
 - `What Time` is an app supported to cross platforms.
-    - Electron App
     - Single Page Application
     - Progressive Web Apps
+    - Electron App
 - This app converts dates in various formarts;
     - Unixtime
     - UTC
@@ -27,9 +27,9 @@
 $ npm install
 ```
 
-## Single Page Application / Progress Web Apps
+## Single Page Application / Progressive Web Apps
 - See https://seigo-pon.github.io/whattime/
-    - Deployed to Github Pages.
+- Deployed to Github Pages.
 
 ### Start for development
 
