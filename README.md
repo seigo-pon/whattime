@@ -21,45 +21,33 @@
 - [electron-builder](https://github.com/electron-userland/electron-builder)
 - [Material Design](https://material.io)
 
-## Installation
+## Build Setup
 
 ```
-$ npm install
+# install
+npm install
+
+# development build for spa / pwa
+# open http://localhost:8080
+npm run serve
+
+# production build for spa / pwa
+npm run build
+
+# development build for electron
+npm run electron:serve
+
+# production build for electron
+npm run electron:build
 ```
 
 ## Single Page Application / Progressive Web Apps
 - See https://seigo-pon.github.io/whattime/
 - Deployed to Github Pages.
 
-### Start for development
-
-```
-$ npm run serve
-```
-
-Open http://localhost:8080
-
-### Start for production
-
-```
-$ npm run build
-```
-
 ## Electron App
 - This app resides in the menu bar.
 - Press `Ctrl + Cmd + L` to show front.
-
-### Start for development
-
-```
-$ npm run electron:serve
-```
-
-### Start for production
-
-```
-$ npm run electron:build
-```
 
 ## License
 What time is `GNU General Public License v3.0` licensed.
