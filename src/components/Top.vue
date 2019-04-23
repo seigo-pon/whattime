@@ -9,13 +9,6 @@
         mb-4
       >
         <v-container>
-          <v-layout>
-            <v-flex class="text-xs-left">
-              <v-icon>create</v-icon>
-              <span class="ml-1 font-weight-light text-uppercase">Input date time</span>
-            </v-flex>
-          </v-layout>
-
           <v-layout wrap>
             <v-flex
               xs12
@@ -36,6 +29,7 @@
               xs12
               sm2
               md2
+              text-xs-right
             >
               <v-btn
                 class="success"
@@ -53,27 +47,13 @@
               md5
               text-xs-left
             >
-              <span class="font-weight-medium grey--text text-uppercase">Now:</span>
               <v-btn
-                flat
+                outline
                 small
                 color="secondary"
                 @click="inputCopyDateTime(nowDate)"
               >
-                {{ nowDate }}
-              </v-btn>
-            </v-flex>
-
-            <v-flex
-              xs12
-              text-xs-left
-            >
-              <v-btn
-                outline
-                small
-                @click="toggleNowDateFormat"
-              >
-                {{ nowDateFormat }}
+                Now
               </v-btn>
             </v-flex>
           </v-layout>
@@ -127,7 +107,7 @@
         xs12
         mb-4
       >
-        <v-expansion-panel v-model="historyPanelIndex">
+        <v-expansion-panel>
           <v-expansion-panel-content>
             <template v-slot:header>
               <div class="text-xs-left">
@@ -141,14 +121,15 @@
                 <v-layout>
                   <v-flex xs12>
                     <v-data-table
-                      :headers="historyHeaders"
                       :items="historyDateTimes"
+                      hide-headers
                       hide-actions
-                      :pagination.sync="historyPagenation"
                       class="elevation-1"
                     >
                       <template slot="items" slot-scope="props">
-                        <td class="font-weight-thin text-xs-left">{{ props.item.createdAt.toLocaleString() }}</td>
+                        <td class="font-weight-thin text-xs-left">
+                          {{ props.item.createdAt.toLocaleString() }}
+                        </td>
                         <td class="text-xs-left">
                           <v-btn
                             flat
@@ -156,27 +137,12 @@
                           >
                             {{ props.item.input }}
                           </v-btn>
-                        <td class="text-xs-left">
-                          <v-btn
-                            flat
-                            @click="inputCopyDateTime(props.item.result)"
-                          >
-                            {{ props.item.result }}
-                          </v-btn>
                         </td>
                       </template>
                     </v-data-table>
                     <div
-                      v-if="historyPages > 0"
-                      class="text-xs-center pt-2"
+                      class="pt-2"
                     >
-                      <div>
-                        <v-pagination
-                          v-model="historyPagenation.page"
-                          :length="historyPages"
-                          circle
-                        ></v-pagination>
-                      </div>
                       <div class="text-xs-right">
                         <v-btn
                           fab
@@ -196,21 +162,36 @@
         </v-expansion-panel>
       </v-flex>
 
-   <v-snackbar
-      v-model="clipboardSnackbar"
-      :right="true"
-      color="info"
-      :timeout="6000"
-    >
-      Copy to clipboard.
-      <v-btn
-        dark
-        flat
-        @click="clipboardSnackbar = false"
+    <v-snackbar
+        v-model="clipboardSnackbar"
+        :right="true"
+        color="info"
+        :timeout="6000"
       >
-        Close
-      </v-btn>
-    </v-snackbar>
+        Copy to clipboard.
+        <v-btn
+          dark
+          flat
+          @click="clipboardSnackbar = false"
+        >
+          Close
+        </v-btn>
+      </v-snackbar>
+
+      <v-flex id="floating">
+        <v-btn
+          dark
+          fab
+          fixed
+          bottom
+          right
+          color="accent"
+          @click="scrollToTop"
+        >
+          <v-icon>keyboard_arrow_up</v-icon>
+          <v-icon>close</v-icon>
+        </v-btn>
+      </v-flex>
     </v-layout>
   </v-container>
 </template>
@@ -234,76 +215,15 @@
     data () {
       return {
         nowDate: "",
-        nowDateFormat: "UTC",
-        timer: null,
         inputDateTime: "",
         resultDateTimes: {},
         historyDateTimes: [],
-        historyPanelIndex: null,
-        historyHeaders: [
-          { text: 'input at', align: "left", value: 'createdAt' },
-          { text: 'input value', value: 'input' },
-          { text: 'result value', value: 'result' }
-        ],
-        historyPagenation: {
-          page: 1,
-          descending: true,
-          sortBy: 'createdAt'
-        },
         clipboardSnackbar: false
-      }
-    },
-    watch: {
-      historyPanelIndex () {
-        if (this.historyPanelIndex !== null) {
-          // Scroll to history
-          this.$nextTick(() => {
-            this.$vuetify.goTo(1000)
-          })
-        }
-      }
-    },
-    computed: {
-      historyPages () {
-        if (this.historyPagenation.rowsPerPage == null || this.historyPagenation.totalItems == null) {
-          return 0
-        }
-        return Math.ceil(this.historyPagenation.totalItems / this.historyPagenation.rowsPerPage)
       }
     },
     methods: {
       tickDate () {
-        const date = moment()
-        switch (this.nowDateFormat) {
-        case 'unixtime':
-          this.nowDate = date.valueOf()
-          break
-
-        case 'JST':
-          this.nowDate = date.tz('Asia/Tokyo').format()
-          break
-
-        case 'UTC':
-        default:
-          this.nowDate = date.utc().format()
-          break
-        }
-      },
-      toggleNowDateFormat () {
-        switch (this.nowDateFormat) {
-        case 'unixtime':
-          this.nowDateFormat = 'JST'
-          break
-
-        case 'JST':
-          this.nowDateFormat = 'UTC'
-          break
-
-        case 'UTC':
-        default:
-          this.nowDateFormat = 'unixtime'
-          break
-        }
+        this.nowDate = moment().tz('Asia/Tokyo').format()
       },
       convertDateTime () {
         // Empty data is disabled.
@@ -380,7 +300,6 @@
           } else {
             console.log(doc)
             this.historyDateTimes.unshift(doc)
-            this.historyPagenation.totalItems = this.historyDateTimes.length
           }
         })
       },
@@ -413,8 +332,12 @@
           } else {
             console.log(runRemoved)
             this.historyDateTimes = []
-            this.historyPagenation.totalItems = this.historyDateTimes.length
           }
+        })
+      },
+      scrollToTop () {
+        this.$nextTick(() => {
+          this.$vuetify.goTo(0)
         })
       }
     },
@@ -426,7 +349,6 @@
         } else {
           console.log(docs)
           this.historyDateTimes = docs
-          this.historyPagenation.totalItems = this.historyDateTimes.length
         }
       })
 
@@ -447,5 +369,7 @@
 </script>
 
 <style>
-
+#floating .v-btn--floating {
+  margin: 0 0 24px 0;
+}
 </style>
