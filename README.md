@@ -42,7 +42,7 @@ npm run electron:build
 ```
 
 ## Single Page Application / Progressive Web Apps
-- See https://seigo-pon.github.io/whattime/
+- See https://seigo-pon.github.io/whattime/.
 - Deployed to Github Pages.
 
 ## Electron App
