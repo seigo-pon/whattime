@@ -2,6 +2,7 @@ import Vue from 'vue'
 import './plugins/vuetify'
 import App from './App.vue'
 import Clipboard from 'v-clipboard'
+import './registerServiceWorker'
 
 Vue.config.productionTip = false
 

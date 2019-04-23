@@ -1,17 +1,20 @@
 # What Time
 
-## What's this?
-- `What Time` is electron app.
-- This app is always executed menu bar app in macOS.
-    - Not supported Windows...
-- This app is converted date and time by some format.
-    - unixtime
+[![License](https://img.shields.io/github/license/seigo-pon/whattime.svg)]()
+
+## Features
+- `What Time` is an app supported to cross platforms.
+    - Electron App
+    - Single Page Application
+    - Progressive Web Apps
+- This app converts dates in various formarts;
+    - Unixtime
     - UTC
     - ISO
     - JST
     - and more...
 
-## Frameworks
+## Technology Stack
 - [Vue.js](https://github.com/vuejs/vue)
 - [vuetify](https://github.com/vuetifyjs/vuetify)
 - [electron](https://github.com/electron/electron)
@@ -24,31 +27,35 @@
 $ npm install
 ```
 
-### Getting started for Web App
+## Single Page Application / Progress Web Apps
+- See https://seigo-pon.github.io/whattime/
+    - Deployed to Github Pages.
 
-#### Development
+### Start for development
 
 ```
 $ npm run serve
 ```
 
-Open `http://localhost:8080`.
+Open http://localhost:8080
 
-#### Production
+### Start for production
 
 ```
 $ npm run build
 ```
 
-### Getting started for Electron
+## Electron App
+- This app resides in the menu bar.
+- Press `Ctrl + Cmd + L` to show front.
 
-#### Development
+### Start for development
 
 ```
 $ npm run electron:serve
 ```
 
-#### Production
+### Start for production
 
 ```
 $ npm run electron:build
