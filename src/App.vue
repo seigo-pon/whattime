@@ -35,7 +35,7 @@
         xs12
         text-xs-center
       >
-        &copy; 2019 - <strong>What time?</strong>
+        &copy; 2019 - <strong>What Time</strong>
       </v-flex>
     </v-footer>
   </v-app>
